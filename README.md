@@ -11,5 +11,6 @@ Collections:
 5.Tasks: Contains information about tasks assigned to users.
 6.Company Drives: Stores details about placement drives conducted by companies.
 7.Mentors: Contains information about mentors and their mentee counts.
+8.Submissions: Tracks the submissions of tasks and codekata by users, including details like marks, type, and submission timestamps.
 
 git clone: https://github.com/suganyarajes/MongoDb-Day36.git

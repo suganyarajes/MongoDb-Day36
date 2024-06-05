@@ -1,0 +1,157 @@
+
+1.Find all the topics and tasks which are taught in the month of October
+
+mongodbtask> db.topics.find({scheduledDate:{$gte: 'ISODate("2020-10-01T00:00:00Z")', $lt: 'ISODate("2020-11-01T00:00:00Z")'}})
+[
+  {
+    _id: ObjectId('665f6a175bebfff6c4cdcdfa'),
+    id: '1',
+    name: 'Introduction to Python',
+    scheduledDate: 'ISODate("2020-10-01T00:00:00Z")',
+    content: 'Basics of Python',
+    preread: 'Python installation guide',
+    sessionDetails: 'Introduction to Python programming',
+    taskDetails: 'Write a Python program to add two numbers',
+    batchId: '1',
+    createdDate: 'ISODate("2020-09-01T00:00:00Z")',
+    updatedDate: 'ISODate("2020-09-01T01:00:00Z")'
+  },
+  {
+    _id: ObjectId('665f6a175bebfff6c4cdcdfb'),
+    id: '2',
+    name: 'Advanced Python',
+    scheduledDate: 'ISODate("2020-10-15T00:00:00Z")',
+    content: 'Advanced Python concepts',
+    preread: 'Basic Python knowledge',
+    sessionDetails: 'In-depth Python programming',
+    taskDetails: 'Write a Python program to implement a stack',
+    batchId: '1',
+    createdDate: ' ISODate("2020-09-15T00:00:00Z")',
+    updatedDate: 'ISODate("2020-09-15T01:00:00Z")'
+  }
+]
+
+
+mongodbtask> db.tasks.find({assignedDate:{$gte: 'ISODate("2020-10-01T00:00:00Z")',$lt: 'ISODate("2020-11-01T00:00:00Z")'}})
+[
+  {
+    _id: ObjectId('665f6c235bebfff6c4cdcdfc'),
+    id: '1',
+    name: 'Add Two Numbers',
+    description: 'Write a Python program to add two numbers',
+    assignedDate: 'ISODate("2020-10-01T00:00:00Z")',
+    dueDate: 'ISODate("2020-10-05T00:00:00Z")',
+    status: 'completed',
+    userId: '1',
+    createdAt: 'ISODate("2020-10-01T00:00:00Z")',
+    updatedAt: 'ISODate("2020-10-05T00:00:00Z")'
+  },
+  {
+    _id: ObjectId('665f6c235bebfff6c4cdcdfd'),
+    id: 2,
+    name: 'Implement Stack',
+    description: 'Write a Python program to implement a stack',
+    assignedDate: 'ISODate("2020-10-15T00:00:00Z")',
+    dueDate: 'ISODate("2020-10-20T00:00:00Z")',
+    status: 'pending',
+    userId: '1',
+    createdAt: 'ISODate("2020-10-15T00:00:00Z")',
+    updatedAt: 'ISODate("2020-10-20T00:00:00Z")'
+  }
+2.Find all the company drives which appeared between 15-Oct-2020 and 31-Oct-2020
+
+mongodbtask> db.company_drivers.find({driveDate:{$gte: 'ISODate("2020-10-15T00:00:00Z")',$lt: 'ISODate("2020-11-01T00:00:00Z")'}})
+[
+  {
+    _id: ObjectId('665f6d3b5bebfff6c4cdcdfe'),
+    id: '1',
+    companyName: 'Google',
+    driveDate: 'ISODate("2020-10-20T00:00:00Z")',
+    createdDate: 'ISODate("2020-09-20T00:00:00Z")',
+    updatedDate: 'ISODate("2020-09-20T01:00:00Z")'
+  },
+  {
+    _id: ObjectId('665f6d3b5bebfff6c4cdcdff'),
+    id: '2',
+    companyName: 'Facebook',
+    driveDate: 'ISODate("2020-10-25T00:00:00Z")',
+    createdDate: 'ISODate("2020-09-25T00:00:00Z")',
+    updatedDate: 'ISODate("2020-09-25T01:00:00Z")'
+  }
+]
+
+3.Find all the company drives and students who appeared for the placement
+
+mongodbtask>  db.company_drivers.aggregate([{$lookup:{from:'users',localField:'id',foreignField:'driveId',as:'students'}}])
+[
+  {
+    _id: ObjectId('665f6d3b5bebfff6c4cdcdfe'),
+    id: '1',
+    companyName: 'Google',
+    driveDate: 'ISODate("2020-10-20T00:00:00Z")',
+    createdDate: 'ISODate("2020-09-20T00:00:00Z")',
+    updatedDate: 'ISODate("2020-09-20T01:00:00Z")',
+    students: []
+  },
+  {
+    _id: ObjectId('665f6d3b5bebfff6c4cdcdff'),
+    id: '2',
+    companyName: 'Facebook',
+    driveDate: 'ISODate("2020-10-25T00:00:00Z")',
+    createdDate: 'ISODate("2020-09-25T00:00:00Z")',
+    updatedDate: 'ISODate("2020-09-25T01:00:00Z")',
+    students: []
+  }
+]
+
+4.Find the number of problems solved by the user in codekata
+
+mongodbtask> db.submission.aggregate([{$match: {userId: '1',  type: "codekata"}},{ $group: {_id: "$userId",problemsSolved: { $sum: '1' }}}])
+[ { _id: '1', problemsSolved: 0 } ]
+
+
+5.Find all the mentors who have more than 15 mentees
+mongodbtask> db.mentors.find({ role: "mentor",menteesCount: { $gt: '15' }})
+[
+  {
+    _id: ObjectId('665f6fbf5bebfff6c4cdce00'),
+    id: '1',
+    name: 'Bob Smith',
+    email: 'bob.smith@example.com',
+    password: 'password456',
+    addressLine1: '456 Elm St',
+    addressLine2: 'Suite 5A',
+    state: 'New York',
+    city: 'New York City',
+    town: 'Manhattan',
+    pincode: '10001',
+    mobileNumber: '9876543210',
+    experience: '5',
+    aadharNumber: '2345-6789-1011',
+    role: 'mentor',
+    batchId: '1',
+    geekCoins: '100',
+    createdAt: 'ISODate("2020-02-01T00:00:00Z")',
+    updatedAt: 'ISODate("2020-11-01T00:00:00Z")',
+    menteesCount: '20'
+  }
+
+
+6.Find the number of users who are absent and task is not submitted between 15-Oct-2020 and 31-Oct-2020
+
+mongodbtask> db.attendance.find({createdDate: {$gte: 'ISODate("2020-10-15T00:00:00Z")', $lt: 'ISODate("2020-11-01T00:00:00Z")'}, isPresent:
+ 'false', isTaskSubmitted: 'false'}).pretty()
+[
+  {
+    _id: ObjectId('6660aa73505d202b9bcdcdf9'),
+    id: '3',
+    studentId: '2',
+    sessionId: '3',
+    sessionType: 'lecture',
+    isPresent: 'false',
+    isTaskSubmissionNeeded: 'false',
+    isTaskSubmitted: 'false',
+    createdDate: 'ISODate("2020-10-20T00:00:00Z")',
+    updatedDate: 'ISODate("2020-10-20T01:00:00Z")'
+  }
+]
